@@ -1,4 +1,4 @@
-import { ChatOpenAI } from '@langchain/openai';
+import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
 
 export type ActionType = 'CALENDAR_EVENT' | 'SEND_EMAIL' | 'CRM_UPDATE';
 
@@ -29,8 +29,8 @@ export interface CRMAction {
 export type ParsedAction = CalendarAction | EmailAction | CRMAction;
 
 export async function parseIntent(intent: string, context: Record<string, unknown> = {}): Promise<ParsedAction> {
-  const model = new ChatOpenAI({
-    model: 'gpt-4o-mini',
+  const model = new ChatGoogleGenerativeAI({
+    model: 'gemini-2.0-flash',
     temperature: 0,
   });
 

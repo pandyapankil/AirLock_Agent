@@ -20,12 +20,6 @@ Airlock solves a critical problem: AI agents need access to your accounts (email
 - **Scoped Access** - Fine-grained OAuth scope control limits what the agent can do
 - **Action Logging** - Full visibility into all actions the agent attempts
 
-## Demo
-
-The demo simulates an AI agent requesting actions without needing real OAuth setup:
-- Try the "Simulate" page to see consent flow in action
-- View the dashboard to see action history
-
 ## Setup
 
 ```bash
@@ -33,43 +27,77 @@ bun install
 bun dev
 ```
 
-Open [http://localhost:8788](http://localhost:8788) to view.
+Open [http://localhost:3000](http://localhost:3000) to view.
 
 ## Environment Variables
 
 Create a `.env.local` file with:
 
 ```env
-# Auth0
+# Auth0 (Token Vault)
 AUTH0_SECRET=your-secret-at-least-32-chars
-AUTH0_BASE_URL=http://localhost:8788
+AUTH0_BASE_URL=http://localhost:3000
 AUTH0_ISSUER_BASE_URL=https://your-tenant.auth0.com
 AUTH0_CLIENT_ID=your-client-id
 AUTH0_CLIENT_SECRET=your-client-secret
 
-# OpenAI (for intent parsing)
-OPENAI_API_KEY=sk-...
+# Google Gemini API (for intent parsing)
+GEMINI_API_KEY=your-gemini-api-key
 
 # Google OAuth (for real actions)
 GOOGLE_CLIENT_ID=your-google-client-id
 GOOGLE_CLIENT_SECRET=your-google-client-secret
 ```
 
+## Local Development
+
+```bash
+# Install dependencies
+bun install
+
+# Run dev server
+bun run dev
+
+# Build for production
+bun run build
+
+# Start production server
+bun run start
+```
+
+## Deployment to Google Cloud Run
+
+1. **Build and push Docker image:**
+   ```bash
+   gcloud builds submit --tag gcr.io/PROJECT_ID/airlock-agent
+   ```
+
+2. **Deploy to Cloud Run:**
+   ```bash
+   gcloud run deploy airlock-agent \
+     --image gcr.io/PROJECT_ID/airlock-agent \
+     --platform managed \
+     --region us-central1 \
+     --allow-unauthenticated \
+     --set-env-vars AUTH0_SECRET=...,AUTH0_BASE_URL=...,etc
+   ```
+
+Or use the provided `Dockerfile` with your preferred CI/CD.
+
 ## Architecture
 
 - `src/` - Main Next.js landing page
 - `airlock-agent/app/` - Agent API routes and demo UI
-  - `api/intent/` - Parses AI action requests
+  - `api/intent/` - Parses AI action requests (uses Gemini)
   - `api/consent/` - Handles user approval/denial
   - `api/action-log/` - Logs all actions
   - `dashboard/` - View action history
   - `simulate/` - Try the consent flow
 
-## Deployment
+## Tech Stack
 
-Deploy to Cloudflare Pages:
-```bash
-bun run build
-```
-
-Built for the Auth0 "Authorized to Act" Hackathon.
+- **Next.js 16** - Web framework
+- **Auth0** - Token Vault for secure OAuth token storage
+- **Google Gemini API** - Intent parsing
+- **Google APIs** - Calendar, Gmail integration
+- **Google Cloud Run** - Deployment target
