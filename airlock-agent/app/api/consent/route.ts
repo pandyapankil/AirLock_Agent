@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
     actionStore.approveAction(actionId);
     actionStore.grantScopes(userId, action.scopes);
 
-    const result = await executeAction(action.action as ParsedAction, userId, action.intent);
+    const result = await executeAction(action.action as unknown as ParsedAction, userId, action.intent);
     actionStore.markExecuted(actionId);
 
     return NextResponse.json({

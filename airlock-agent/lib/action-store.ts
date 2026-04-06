@@ -1,10 +1,7 @@
 export interface PendingAction {
   id: string;
   userId: string;
-  action: {
-    type: 'CALENDAR_EVENT' | 'SEND_EMAIL' | 'CRM_UPDATE';
-    [key: string]: unknown;
-  };
+  action: Record<string, unknown>;
   intent: string;
   scopes: string[];
   status: 'pending' | 'approved' | 'denied' | 'executed';
@@ -41,10 +38,11 @@ class ActionStore {
     return id;
   }
 
-  getPendingActions(userId: string): PendingAction[] {
+  getPendingActions(userId: string): Record<string, unknown>[] {
     return Array.from(this.pendingActions.values())
       .filter((a) => a.userId === userId && a.status === 'pending')
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+      .map((a) => ({ ...a, createdAt: a.createdAt.toISOString() }));
   }
 
   getPendingAction(actionId: string): PendingAction | undefined {
@@ -92,10 +90,11 @@ class ActionStore {
     return id;
   }
 
-  getActionLog(userId: string, limit: number = 10): ActionLogEntry[] {
+  getActionLog(userId: string, limit: number = 10): Record<string, unknown>[] {
     return this.actionLog
       .filter((l) => l.userId === userId)
-      .slice(0, limit);
+      .slice(0, limit)
+      .map((l) => ({ ...l, timestamp: l.timestamp.toISOString() }));
   }
 
   grantScopes(userId: string, scopes: string[]): void {

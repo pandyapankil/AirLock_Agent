@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
       // Add to pending consent queue
       const actionId = actionStore.addPendingAction({
         userId: user_id,
-        action: parsedAction,
+        action: parsedAction as unknown as Record<string, unknown>,
         intent,
         scopes: requiredScopes,
       });
