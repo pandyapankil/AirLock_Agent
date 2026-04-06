@@ -41,8 +41,8 @@ AUTH0_ISSUER_BASE_URL=https://your-tenant.auth0.com
 AUTH0_CLIENT_ID=your-client-id
 AUTH0_CLIENT_SECRET=your-client-secret
 
-# Google Gemini API (for intent parsing)
-GEMINI_API_KEY=your-gemini-api-key
+# Z.ai GLM API (for intent parsing)
+OPENAI_API_KEY=your-zai-api-key
 
 # Google OAuth (for real actions)
 GOOGLE_CLIENT_ID=your-google-client-id
@@ -88,7 +88,7 @@ Or use the provided `Dockerfile` with your preferred CI/CD.
 
 - `src/` - Main Next.js landing page
 - `airlock-agent/app/` - Agent API routes and demo UI
-  - `api/intent/` - Parses AI action requests (uses Gemini)
+  - `api/intent/` - Parses AI action requests (uses Z.ai GLM)
   - `api/consent/` - Handles user approval/denial
   - `api/action-log/` - Logs all actions
   - `dashboard/` - View action history
@@ -98,6 +98,6 @@ Or use the provided `Dockerfile` with your preferred CI/CD.
 
 - **Next.js 16** - Web framework
 - **Auth0** - Token Vault for secure OAuth token storage
-- **Google Gemini API** - Intent parsing
+- **Z.ai GLM API** - Intent parsing
 - **Google APIs** - Calendar, Gmail integration
 - **Google Cloud Run** - Deployment target

@@ -1,4 +1,4 @@
-import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
+import { ChatOpenAI } from '@langchain/openai';
 
 export type ActionType = 'CALENDAR_EVENT' | 'SEND_EMAIL' | 'CRM_UPDATE';
 
@@ -29,9 +29,12 @@ export interface CRMAction {
 export type ParsedAction = CalendarAction | EmailAction | CRMAction;
 
 export async function parseIntent(intent: string, context: Record<string, unknown> = {}): Promise<ParsedAction> {
-  const model = new ChatGoogleGenerativeAI({
-    model: 'gemini-2.0-flash',
+  const model = new ChatOpenAI({
+    model: 'glm-4-flash',
     temperature: 0,
+    configuration: {
+      baseURL: 'https://open.bigmodel.cn/api/paas/v4',
+    },
   });
 
   const currentYear = new Date().getFullYear();
